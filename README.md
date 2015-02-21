@@ -3,18 +3,29 @@ Polar
 
 Polar is a game for bitbox where you are an and can change your polarity to go through mazes.
 
+![Intro](doc/intro.png)
+![Level1](doc/level1.png)
+![Level3](doc/level3.png)
+
+
+Inspiration
+-----------
 This game has been inspired by *Polarity*, a game written for ludum dare 23 by nornagon
 
  http://nornagon.net/games/polarity/
  https://github.com/nornagon/polarity
+
+Credits
+-------
 
 This game (code, GFX, sounds) is (c) Makapuf 2015, written in a day for the Bitbox Console
 
 Code is 200 lines of C
 Tools used : gimp, tiled, C editor, bitbox SDK
 
+
 TODO
-====
+----
 
 small anims (intro : up/dn,loose : ejecte, win : ascend, chage color : flash sprite) ? (avec sprite)
 
