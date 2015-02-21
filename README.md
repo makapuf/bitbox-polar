@@ -1,7 +1,9 @@
 Polar
 ======
 
-Polar is a game for bitbox where you are an and can change your polarity to go through mazes.
+Polar is a game for Bitbox where you are a particle and you can change your polarity to go through mazes.
+
+[The Bitbox console](http://bitboxconsole.blogspot.com)
 
 ![Intro](doc/intro.png)
 ![Level1](doc/level1.png)
