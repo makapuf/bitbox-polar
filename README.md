@@ -12,7 +12,7 @@ Polar is a game for Bitbox where you are a particle and you can change your pola
 
 Inspiration
 -----------
-This game has been inspired by *Polarity*, a game written for ludum dare 23 by nornagon
+This game has been inspired by *Polarity*, a game written for ludum dare 23 by @nornagon
 
  http://nornagon.net/games/polarity/
  https://github.com/nornagon/polarity
