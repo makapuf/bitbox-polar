@@ -1,18 +1,3 @@
-
-
-/* TODO
-
-	physics, collision and 1st level design
-	small anims (intro : up/dn,loose : ejecte, win : ascend, chage color : flash sprite) ? (avec sprite)
-	
-	transition between screens : passage joli diag en 1s
-
-	sound / SfX ! 
-	cache charges lvl pour + rapide  
-	intermediary text levels / animation intro 
-	levels 
- */
-
 #include <bitbox.h>
 #include <blitter.h>
 #include <math.h> // sqrtf
@@ -55,7 +40,7 @@ void enter_level(int l)
 	tmap_blit(bg,0,0, tmap_header, tmap_tmap[level]);
 
 	vx=vy=0;
-	x=200.f;y=10000.f;
+	x=200.f;y=10000.f;sprite->y=10000;
 	polarity=0;
 	pause = 30; // half second pause.
 	
@@ -69,13 +54,6 @@ void enter_level(int l)
 					vram[j][i]=1; 
 					break;
 				}
-
-
-	if (y<512.f) 
-		start_time = vga_frame;
-	else
-		sprite->y=(int)y;
-
 
 }
 
@@ -98,7 +76,7 @@ void physics( void )
 				float d = sqrtf(dx*dx + dy*dy); // dist to charge
 
 				// too small distance does not count
-				message("%d %d : d %f +force %f %f\n",i,j,d, ELECT * dx/d/d/d, ELECT * dy/d/d/d);
+				// message("%d %d : d %f +force %f %f\n",i,j,d, ELECT * dx/d/d/d, ELECT * dy/d/d/d);
 				if (d<16) d=16;
 
 				// fx = cos.f = cos.k/d^2 = k.cos.d/d3 =k.dx/d3, a=f/m, mcte, dvx = Kdx/d3
@@ -112,11 +90,12 @@ void physics( void )
 			}
 			// other tmaps don't do anything
 		}
-		message("force %f %f\n", vx, vy);
+		// message("force %f %f\n", vx, vy);
 }
 
 void game_init( void ) 
 {
+	blitter_init();
 	bg = tilemap_new(tmap_tset,0,0,TMAP_HEADER(64,SCREEN_Y,TSET_16, TMAP_U8), vram); 
 	sprite = sprite_new(build_sprite_spr,0,0,0);
 	enter_level(0);
@@ -135,12 +114,15 @@ void touch (int touched,float *y, float *vx, float *vy )
 			break;
 
 		case tmap_pike : 
-			message("killed!\n");
+		case tmap_pike2 : 
+		case tmap_pike3 : 
 			enter_level(level);
 			break;
 
 		case tmap_goal : 
-			message("win!\n");
+			// if we leave the first non start level, reset
+			if (level==REAL_LEVEL-1) 
+				start_time=vga_frame;
 			enter_level(level+1);
 			break;
 
@@ -208,10 +190,8 @@ void game_frame( void ) {
 
 		// horizontal hit ? same inverting x and y
 		touched = vram[(int)(y/16)+1][(int)(x/16)+(vx>0?1:0)]; // ??? 
-		message("%d %d tch %d\n",(int)(x/16)+(vx>0?1:0),(int)(y/16), touched);
+		// message("%d %d tch %d\n",(int)(x/16)+(vx>0?1:0),(int)(y/16), touched);
 
 		touch(touched,&x,&vy,&vx);
-
-				
 	}
 }
