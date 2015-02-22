@@ -1,10 +1,10 @@
 USE_ENGINE = 1
+USE_CHIPTUNE = 1
 NO_SDCARD=1
-
 
 NAME=polar
 
-GAME_C_FILES = $(NAME).c 
+GAME_C_FILES = $(NAME).c song.c
 GAME_BINARY_FILES = tmap.tset tmap.tmap build/sprite.spr
 
 include $(BITBOX)/lib/bitbox.mk

@@ -1,6 +1,9 @@
 #include <bitbox.h>
 #include <blitter.h>
 #include <math.h> // sqrtf
+#include <chiptune_player.h>
+
+#include "song.h"
 
 #include "build/tmap.h"
 	
@@ -9,6 +12,7 @@
 
 uint8_t vram[SCREEN_Y][64];
 extern char build_sprite_spr[];
+extern const unsigned char songdata[];
 
 object *bg, *sprite;
 
@@ -44,9 +48,12 @@ void enter_level(int l)
 	polarity=0;
 	pause = 30; // half second pause.
 	
-	
-	// search start tmap & position sprite
-	if (level>=2) // dont biother for first levels
+	if (level>=2) // dont bother for first levels
+	{
+		// player stop
+		ply_init(0,0);
+
+		// search start tmap & position sprite
 		for (int j=0;j<SCREEN_Y;j++)
 			for (int i=0;i<SCREEN_Y;i++)  // loop on all tmaps. could be faster to keep only pos and neg index ..
 				if (vram[j][i] == tmap_neutral) {
@@ -54,6 +61,7 @@ void enter_level(int l)
 					vram[j][i]=1; 
 					break;
 				}
+	}
 
 }
 
@@ -133,6 +141,12 @@ void touch (int touched,float *y, float *vx, float *vy )
 }
 
 void game_frame( void ) {
+	// chiptune player 
+	if (vga_frame == 10)
+		ply_init(SONGLEN,songdata);
+
+	if (vga_frame > 10)
+		ply_update();
 
 	// little pause
 	if (pause) {
