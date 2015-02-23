@@ -107,6 +107,7 @@ void game_init( void )
 	bg = tilemap_new(tmap_tset,0,0,TMAP_HEADER(64,SCREEN_Y,TSET_16, TMAP_U8), vram); 
 	sprite = sprite_new(build_sprite_spr,0,0,0);
 	enter_level(0);
+	ply_init(SONGLEN,songdata);
 }
 
 void touch (int touched,float *y, float *vx, float *vy )
@@ -141,12 +142,8 @@ void touch (int touched,float *y, float *vx, float *vy )
 }
 
 void game_frame( void ) {
-	// chiptune player 
-	if (vga_frame == 10)
-		ply_init(SONGLEN,songdata);
 
-	if (vga_frame > 10)
-		ply_update();
+	ply_update();
 
 	// little pause
 	if (pause) {
