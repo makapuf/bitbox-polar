@@ -28,10 +28,11 @@ int pause;
 // constants
 // ----
 
+#define START_LEVEL 0
 #define REAL_LEVEL 3
-#define GRAVITY .1f
+#define GRAVITY .10f
 #define DAMPING .97f;
-#define ELECT 500.f
+#define ELECT 600.f
 
 // code
 // ----
@@ -106,7 +107,7 @@ void game_init( void )
 	blitter_init();
 	bg = tilemap_new(tmap_tset,0,0,TMAP_HEADER(64,SCREEN_Y,TSET_16, TMAP_U8), vram); 
 	sprite = sprite_new(build_sprite_spr,0,0,0);
-	enter_level(0);
+	enter_level(START_LEVEL);
 	ply_init(SONGLEN,songdata);
 }
 
@@ -116,8 +117,9 @@ void touch (int touched,float *y, float *vx, float *vy )
 	switch (touched) {
 		case tmap_block : 
 		case tmap_block2 : 
-			// rewind move
+			// rewind move 
 			*y-=*vy;
+			*y = ((int)*y+8)/16*16 - *vy/8;
 			*vy=0.f; 
 			*vx *= DAMPING;
 			break;
@@ -178,6 +180,9 @@ void game_frame( void ) {
 		} else if (GAMEPAD_PRESSED(0,R) || GAMEPAD_PRESSED(0,B) || GAMEPAD_PRESSED(0,Y)) { // minus
 			polarity=tmap_minus; 
 			sprite->fr=2; 
+		} else if (GAMEPAD_PRESSED(0,select)) { // select : restart
+			enter_level(level); 
+			sprite->fr=2; 
 		} else {
 			polarity=0;
 			sprite->fr=1; 
@@ -185,9 +190,6 @@ void game_frame( void ) {
 
 		physics();
 		x += vx; y+= vy;
-		// update sprite
-		sprite->x=x;
-		sprite->y=y;
 		
 		// show time since beginning
 		int t=(vga_frame-start_time)/60;
@@ -200,9 +202,13 @@ void game_frame( void ) {
 		touch(touched,&y,&vx,&vy);
 
 		// horizontal hit ? same inverting x and y
-		touched = vram[(int)(y/16)+1][(int)(x/16)+(vx>0?1:0)]; // ??? 
+		touched = vram[(int)y/16+1][(int)x/16+(vx>0?1:0)]; // ??? 
+		touch(touched,&x,&vy,&vx);
 		// message("%d %d tch %d\n",(int)(x/16)+(vx>0?1:0),(int)(y/16), touched);
 
-		touch(touched,&x,&vy,&vx);
+		// update sprite
+		sprite->x=x;
+		sprite->y=y;
+
 	}
 }
