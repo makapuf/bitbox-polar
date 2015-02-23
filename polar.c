@@ -30,9 +30,9 @@ int pause;
 
 #define START_LEVEL 0
 #define REAL_LEVEL 3
-#define GRAVITY .10f
+#define GRAVITY .08f
 #define DAMPING .97f;
-#define ELECT 600.f
+#define ELECT 650.f
 
 // code
 // ----
