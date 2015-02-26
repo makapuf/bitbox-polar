@@ -32,13 +32,16 @@ int pause;
 #define REAL_LEVEL 3
 #define GRAVITY .08f
 #define DAMPING .97f;
-#define ELECT 650.f
+#define ELECT 700.f
 
 // code
 // ----
 
 void enter_level(int l)
 {
+	if (level==REAL_LEVEL-1) 
+		start_time=vga_frame; // begin chronometer here
+
 	level = l;
 
 	// non jolie transition vram
@@ -111,36 +114,53 @@ void game_init( void )
 	ply_init(SONGLEN,songdata);
 }
 
-void touch (int touched,float *y, float *vx, float *vy )
+
+int collide (int x, int y)
+// return the touched tile at this position (0 : nothing, 1: block, 2:pike, 3:goal )
 {
+
+	int touched = vram[y/16][x/16]; 
+
 	// vertical touch, x and y can be inverted
 	switch (touched) {
 		case tmap_block : 
 		case tmap_block2 : 
-			// rewind move 
-			*y-=*vy;
-			*y = ((int)*y+8)/16*16 - *vy/8;
-			*vy=0.f; 
-			*vx *= DAMPING;
+			return 1;
 			break;
 
 		case tmap_pike : 
 		case tmap_pike2 : 
 		case tmap_pike3 : 
-			enter_level(level);
+			return 2;
 			break;
 
 		case tmap_goal : 
-			// if we leave the first non start level, reset
-			if (level==REAL_LEVEL-1) 
-				start_time=vga_frame;
-			enter_level(level+1);
+			return 3;
 			break;
 
 		default : 
-			// do nothing, dont collide
+			return 0; 
 			break;
 	}
+}
+
+int max(int a, int b, int c, int d)
+{
+	int m=a;
+	m = b>m ? b : m;
+	m = c>m ? c : m;
+	m = d>m ? d : m;
+	return m;
+}
+
+int touch_square(int x, int y)
+{
+	return max(
+		collide(x   ,y),
+		collide(x+15,y),
+		collide(x   ,y+15),
+		collide(x+15,y+15)
+	);
 }
 
 void game_frame( void ) {
@@ -172,6 +192,11 @@ void game_frame( void ) {
 			enter_level(level+1);
 
 	} else {
+		// show time since beginning
+		int t=(vga_frame-start_time)/60;
+		vram[0][ 8] = tmap_zero + (t/100)%10;
+		vram[0][ 9] = tmap_zero + (t/10)%10;
+		vram[0][10] = tmap_zero + t%10;
 
 		// input handling
 		if (GAMEPAD_PRESSED(0,L) || GAMEPAD_PRESSED(0,A) || GAMEPAD_PRESSED(0,X)) { // plus
@@ -188,22 +213,24 @@ void game_frame( void ) {
 			sprite->fr=1; 
 		}
 
-		physics();
-		x += vx; y+= vy;
-		
-		// show time since beginning
-		int t=(vga_frame-start_time)/60;
-		vram[0][ 8] = tmap_zero + (t/100)%10;
-		vram[0][ 9] = tmap_zero + (t/10)%10;
-		vram[0][10] = tmap_zero + t%10;
+		physics(); // computes vx,vy
 
-		// vertical hit ?
-		int touched = vram[(int)(y/16)+(vy>0?1:0)][(int)(x/16)]; // ??? 
-		touch(touched,&y,&vx,&vy);
+		// hit vertical wall after moving ?
+		switch(touch_square(x+vx,y)) {
+			case 0 : x += vx; break; // OK can move
+			case 1 : vx =0.f; vy *= DAMPING;break; // dampen
+			case 2 : enter_level(level);break;
+			case 3 : enter_level(level+1); break;
+		}
 
-		// horizontal hit ? same inverting x and y
-		touched = vram[(int)y/16+1][(int)x/16+(vx>0?1:0)]; // ??? 
-		touch(touched,&x,&vy,&vx);
+		// hit horizontal wall after moving ?
+		switch(touch_square(x,y+vy)) {
+			case 0 : y += vy; break; // OK can move
+			case 1 : vy=0.f; vx *= DAMPING; break;// dampen
+			case 2 : enter_level(level);break;
+			case 3 : enter_level(level+1); break;
+		}
+
 		// message("%d %d tch %d\n",(int)(x/16)+(vx>0?1:0),(int)(y/16), touched);
 
 		// update sprite
