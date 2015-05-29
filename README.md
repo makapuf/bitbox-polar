@@ -9,6 +9,7 @@ Polar is a game for Bitbox where you are a particle and you can change your pola
 ![Level1](doc/level1.png)
 ![Level3](doc/level3.png)
 
+[![Build Status](https://travis-ci.org/makapuf/bitbox-polar.svg)](https://travis-ci.org/makapuf/bitbox-polar)
 
 Inspiration
 -----------
