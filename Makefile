@@ -1,6 +1,5 @@
 USE_ENGINE = 1
 USE_CHIPTUNE = 1
-NO_SDCARD=1
 
 NAME=polar
 

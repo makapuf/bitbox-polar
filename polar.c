@@ -10,7 +10,7 @@
 #define SCREEN_X 40
 #define SCREEN_Y 30
 
-uint8_t vram[SCREEN_Y][64];
+uint8_t vram[SCREEN_Y][SCREEN_X];
 extern char build_sprite_spr[];
 extern const unsigned char songdata[];
 
@@ -108,7 +108,7 @@ void physics( void )
 void game_init( void ) 
 {
 	blitter_init();
-	bg = tilemap_new(tmap_tset,0,0,TMAP_HEADER(64,SCREEN_Y,TSET_16, TMAP_U8), vram); 
+	bg = tilemap_new(tmap_tset,0,0,TMAP_HEADER(SCREEN_X,SCREEN_Y,TSET_16, TMAP_U8), vram); 
 	sprite = sprite_new(build_sprite_spr,0,0,0);
 	enter_level(START_LEVEL);
 	ply_init(SONGLEN,songdata);
