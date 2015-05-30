@@ -26,4 +26,4 @@ script:
 after_script:
 
 env:
-  - BITBOX=$TRAVIS_BUILD_DIR/bitbox/lib
+  - BITBOX=$TRAVIS_BUILD_DIR/bitbox
