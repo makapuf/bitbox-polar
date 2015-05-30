@@ -11,7 +11,6 @@ before_script:
   - sudo apt-get -qq update
   - sudo apt-get -qq install gcc-arm-none-eabi gcc-4.8 libsdl1.2-dev libstdc++-4.8-dev python-imaging
 
-
   ## now setup 4.8 as real gcc alternative (could use update-alternative, but eh)
   - sudo rm /usr/bin/gcc /usr/bin/g++
   - sudo ln -s /usr/bin/gcc-4.8 /usr/bin/gcc
@@ -20,10 +19,9 @@ before_script:
   # check it worked
   - arm-none-eabi-gcc --version 
   - gcc --version
-script:
-  - "make && make alltest"
 
-after_script:
+script:
+  - "make && make test"
 
 env:
   - BITBOX=$TRAVIS_BUILD_DIR/bitbox
