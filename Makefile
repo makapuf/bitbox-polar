@@ -8,7 +8,7 @@ GAME_BINARY_FILES = build/sprite.spr
 
 include $(BITBOX)/lib/bitbox.mk
 
-build/$(NAME).o : build/tmap.h
+$(NAME).c : build/tmap.h
 
 # sprite
 build/sprite.spr: spr_minus.png spr_zero.png spr_plus.png
