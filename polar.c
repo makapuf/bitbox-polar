@@ -92,7 +92,7 @@ void physics( void )
 				if (d<16) d=16;
 
 				// fx = cos.f = cos.k/d^2 = k.cos.d/d3 =k.dx/d3, a=f/m, mcte, dvx = Kdx/d3
-				if (vram[j][i] == polarity) {
+				if (vram[j][i] == inv_polarity) {
 					vx -= ELECT * dx/d/d/d; 
 					vy -= ELECT * dy/d/d/d; 
 				} else {
