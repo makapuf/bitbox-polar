@@ -201,13 +201,13 @@ void game_frame( void ) {
 		// input handling
 		if (GAMEPAD_PRESSED(0,L) || GAMEPAD_PRESSED(0,A) || GAMEPAD_PRESSED(0,X)) { // plus
 			polarity=tmap_plus;
-			sprite->fr=0; 
+			sprite->fr=2; 
 		} else if (GAMEPAD_PRESSED(0,R) || GAMEPAD_PRESSED(0,B) || GAMEPAD_PRESSED(0,Y)) { // minus
 			polarity=tmap_minus; 
-			sprite->fr=2; 
+			sprite->fr=0; 
 		} else if (GAMEPAD_PRESSED(0,select)) { // select : restart
 			enter_level(level); 
-			sprite->fr=2; 
+			sprite->fr=1; 
 		} else {
 			polarity=0;
 			sprite->fr=1; 
