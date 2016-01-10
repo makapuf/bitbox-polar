@@ -1,5 +1,9 @@
 build/
-*_emu
+polar
 *_test
 *.bin
 *.elf
+tmap.h
+*.spr
+*.tmap
+*.tset

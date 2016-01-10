@@ -3,26 +3,22 @@ USE_CHIPTUNE = 1
 
 NAME=polar
 
-GAME_C_FILES = $(NAME).c song.c build/tmap.c
-GAME_BINARY_FILES = build/sprite.spr
+GAME_C_FILES = $(NAME).c song.c
+GAME_BINARY_FILES = sprite.spr tmap.tmap tmap.tset
 
 include $(BITBOX)/lib/bitbox.mk
 
-$(NAME).c : build/tmap.h
+$(NAME).c: tmap.h
 
 # sprite
-build/sprite.spr: spr_minus.png spr_zero.png spr_plus.png
+sprite.spr: spr_minus.png spr_zero.png spr_plus.png
 	@mkdir -p $(dir $@)
-	python $(BITBOX)/scripts/couples_encode.py $@ $^ 
+	python $(BITBOX)/scripts/couples_encode.py $@ $^
 
-# tilemap / set 
-build/%.c build/%.h: %.tmx
+# tilemap / set
+%.tmap %.tset %.h: %.tmx
 	@mkdir -p $(dir $@)
-	python $(BITBOX)/scripts/tmx.py -o $(dir $@) -c $^ > build/$*.h
+	python $(BITBOX)/scripts/tmx.py $^ > $*.h
 
-# utiliser le linker direct ?
-%_dat.o: %
-	@mkdir -p $(dir $@)
-	cd $(dir $<); xxd -i $(notdir $<) | sed "s/unsigned/const unsigned/" > $(*F).c
-	$(CC) $(ALL_CFLAGS) $(AUTODEPENDENCY_CFLAGS) -c $*.c -o $@
-
+clean::
+	rm -rf *.spr *.tmap *.tset tmap.h

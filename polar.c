@@ -5,13 +5,13 @@
 
 #include "song.h"
 
-#include "build/tmap.h"
+#include "tmap.h"
 	
 #define SCREEN_X 40
 #define SCREEN_Y 30
 
 uint8_t vram[SCREEN_Y][SCREEN_X];
-extern char build_sprite_spr[];
+extern char sprite_spr[];
 extern const unsigned char songdata[];
 
 object *bg, *sprite;
@@ -109,7 +109,7 @@ void game_init( void )
 {
 	blitter_init();
 	bg = tilemap_new(tmap_tset,0,0,TMAP_HEADER(SCREEN_X,SCREEN_Y,TSET_16, TMAP_U8), vram); 
-	sprite = sprite_new(build_sprite_spr,0,0,0);
+	sprite = sprite_new(sprite_spr,0,0,0);
 	enter_level(START_LEVEL);
 	ply_init(SONGLEN,songdata);
 }
