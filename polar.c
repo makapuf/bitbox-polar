@@ -1,9 +1,8 @@
 #include <bitbox.h>
-#include <blitter.h>
 #include <math.h> // sqrtf
-#include <chiptune_player.h>
 
-#include "song.h"
+#include <lib/blitter/blitter.h>
+#include <lib/chiptune/chiptune.h>
 
 #include "tmap.h"
 	
@@ -12,7 +11,7 @@
 
 uint8_t vram[SCREEN_Y][SCREEN_X];
 extern char sprite_spr[];
-extern const unsigned char songdata[];
+extern const struct ChipSong polar_chipsong;
 
 object *bg, *sprite;
 
@@ -55,7 +54,7 @@ void enter_level(int l)
 	if (level>=2) // dont bother for first levels
 	{
 		// player stop
-		ply_init(0,0);
+		chip_play(0);
 
 		// search start tmap & position sprite
 		for (int j=0;j<SCREEN_Y;j++)
@@ -111,7 +110,7 @@ void game_init( void )
 	bg = tilemap_new(tmap_tset,0,0,TMAP_HEADER(SCREEN_X,SCREEN_Y,TSET_16, TMAP_U8), vram); 
 	sprite = sprite_new(sprite_spr,0,0,0);
 	enter_level(START_LEVEL);
-	ply_init(SONGLEN,songdata);
+	chip_play(&polar_chipsong);
 }
 
 
@@ -165,16 +164,12 @@ int touch_square(int x, int y)
 
 void game_frame( void ) {
 
-	ply_update();
-
 	// little pause
 	if (pause) {
 		pause--;
 		return; 
 	} 
 	
-	kbd_emulate_gamepad();
-
 	if (y >= 512.f ) { // sprite not visible? menu level. 
 
 		// animate tmaps : cycle between tmap_anim and tmap_anim_end
