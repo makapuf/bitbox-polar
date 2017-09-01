@@ -2,7 +2,7 @@
 #include <math.h> // sqrtf
 
 #include <lib/blitter/blitter.h>
-#include <lib/chiptune/chiptune.h>
+#include <lib/chiptune/player.h>
 
 #include "tmap.h"
 	
@@ -104,15 +104,6 @@ void physics( void )
 		// message("force %f %f\n", vx, vy);
 }
 
-void game_init( void ) 
-{
-	blitter_init();
-	bg = tilemap_new(tmap_tset,0,0,TMAP_HEADER(SCREEN_X,SCREEN_Y,TSET_16, TMAP_U8), vram); 
-	sprite = sprite_new(sprite_spr,0,0,0);
-	enter_level(START_LEVEL);
-	chip_play(&polar_chipsong);
-}
-
 
 int collide (int x, int y)
 // return the touched tile at this position (0 : nothing, 1: block, 2:pike, 3:goal )
@@ -160,6 +151,16 @@ int touch_square(int x, int y)
 		collide(x   ,y+15),
 		collide(x+15,y+15)
 	);
+}
+
+
+void game_init( void ) 
+{
+	blitter_init();
+	bg = tilemap_new(tmap_tset,0,0,TMAP_HEADER(SCREEN_X,SCREEN_Y,TSET_16, TMAP_U8), vram); 
+	sprite = sprite_new(sprite_spr,0,0,0);
+	enter_level(START_LEVEL);
+	chip_play(&polar_chipsong);
 }
 
 void game_frame( void ) {

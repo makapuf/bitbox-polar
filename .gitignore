@@ -7,3 +7,4 @@ tmap.h
 *.spr
 *.tmap
 *.tset
+bitbox_icon.c

@@ -1,6 +1,7 @@
 NAME=polar
 
-GAME_C_FILES = $(NAME).c song.c lib/chiptune/chiptune.c lib/blitter/blitter.c lib/blitter/blitter_tmap.c lib/blitter/blitter_sprites.c
+GAME_C_FILES = $(NAME).c song.c bitbox_icon.c
+GAME_C_FILES += lib/chiptune/chiptune.c lib/chiptune/player.c lib/blitter/blitter.c lib/blitter/blitter_tmap.c lib/blitter/blitter_sprites.c
 GAME_BINARY_FILES = sprite.spr tmap.tmap tmap.tset
 
 include $(BITBOX)/kernel/bitbox.mk
@@ -18,6 +19,9 @@ sprite.spr: spr_minus.png spr_zero.png spr_plus.png
 %.tmap %.tset %.h: %.tmx
 	@mkdir -p $(dir $@)
 	python2 $(BITBOX)/lib/blitter/scripts/tmx.py $^ > $*.h
+	
+bitbox_icon.c: icon.png
+		python $(BITBOX)/lib/blitter/scripts/mk_ico.py $^ > $@
 
 clean::
-	rm -rf *.spr *.tmap *.tset tmap.h
+	rm -rf *.spr *.tmap *.tset tmap.h bitbox_icon.c
