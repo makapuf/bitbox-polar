@@ -21,7 +21,7 @@ sprite.spr: spr_minus.png spr_zero.png spr_plus.png
 	python2 $(BITBOX)/lib/blitter/scripts/tmx.py $^ > $*.h
 	
 bitbox_icon.c: icon.png
-		python $(BITBOX)/lib/blitter/scripts/mk_ico.py $^ > $@
+		python $(BITBOX)/2nd_boot/mk_ico.py $^ > $@
 
 clean::
 	rm -rf *.spr *.tmap *.tset tmap.h bitbox_icon.c
